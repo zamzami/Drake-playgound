@@ -1,0 +1,10 @@
+prefix=/usr/local2
+libdir=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/ThirdParty/Mumps
+
+Name: Mumps
+Description: Multifrontal Massively Parallel sparse direct Solver
+URL: https://projects.coin-or.org/BuildTools
+Version: 1.5.4
+Libs: ${libdir}/libcoinmumps.la -framework Accelerate  -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin14/5.2.0 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin14/5.2.0/../../.. -lgfortran -lSystem -lquadmath -lm
+Cflags: -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/ThirdParty/Mumps/MUMPS/libseq -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/ThirdParty/Mumps/MUMPS/include
+Requires: 

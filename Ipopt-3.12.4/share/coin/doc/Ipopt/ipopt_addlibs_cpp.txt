@@ -1,0 +1,1 @@
+-L/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/lib -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin14/5.2.0 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin14/5.2.0/../../.. -lipopt -framework Accelerate -lm -ldl -lcoinmumps -framework Accelerate -lgfortran -lSystem -lquadmath -lm

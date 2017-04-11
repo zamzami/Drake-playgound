@@ -1,0 +1,10 @@
+prefix=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4
+libdir=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/Apps/AmplSolver
+
+Name: IPOPT
+Description: Ampl Interface TNLP to Ipopt
+URL: https://projects.coin-or.org/Ipopt
+Version: 3.12.4
+Libs: ${libdir}/libipoptamplinterface.la 
+Cflags: -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/Apps/AmplSolver
+Requires: ipopt coinasl 

@@ -1,0 +1,5 @@
+C = cell(1,0);
+for k = 1:10
+    C{k} = k;
+end
+C

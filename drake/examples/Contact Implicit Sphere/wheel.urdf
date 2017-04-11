@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<robot xmlns="http://drake.mit.edu"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://drake.mit.edu ../../../doc/drakeURDF.xsd" name="wheel">
+<link name="wheel">
+  <inertial>
+    <mass value="14.28" />
+    <inertia iyy=".77843904" ixx=".49991220" izz=".49991220" />
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="1.5708 0 0" />
+    <geometry>
+      <cylinder length=".215" radius="0.323342"/>
+    </geometry>
+    <material name="">
+      <color rgba=".2 .2 .2 1" />
+    </material>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="1.5708 0 0" />
+    <geometry>
+      <cylinder length=".215" radius="0.323342"/>
+    </geometry>
+  </collision>
+  <collision>
+    <geometry>
+      <sphere radius="0"/>
+    </geometry>
+    <origin xyz="0 0 0"/>
+  </collision>
+  </link>
+</robot>

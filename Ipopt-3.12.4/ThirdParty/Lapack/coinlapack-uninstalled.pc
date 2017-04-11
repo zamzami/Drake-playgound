@@ -1,0 +1,10 @@
+prefix=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4
+libdir=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/ThirdParty/Lapack
+
+Name: Lapack
+Description: Linear algebra package
+URL: https://projects.coin-or.org/BuildTools
+Version: 1.5.4
+Libs: ${libdir}/libcoinlapack.la -framework Accelerate   -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin14/5.2.0 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin14/5.2.0/../../.. -lgfortran -lSystem -lquadmath -lm
+Cflags:
+Requires: 

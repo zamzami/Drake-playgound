@@ -1,0 +1,10 @@
+prefix=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4
+libdir=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/Interfaces
+
+Name: IPOPT
+Description: Interior Point Optimizer
+URL: https://projects.coin-or.org/Ipopt
+Version: 3.12.4
+Libs: ${libdir}/libipopt.la -framework Accelerate -framework Accelerate -lm  -ldl
+Cflags: -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/Interfaces -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/Common -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/LinAlg -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/Algorithm -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/contrib/CGPenalty -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/contrib/LinearSolverLoader -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/Ipopt/src/Common
+Requires: coinmumps 

@@ -1,0 +1,1 @@
+../../../build/bin/drake-visualizer & ../../../build/bin/directorpython SteeringCommandDriver.py & ../../pod-build/bin/carSimLCM prius/prius.urdf

@@ -1,0 +1,6 @@
+zdim=5
+cstr_name={'fun'}
+
+      for i=1:zdim 
+           cstr_name_2=strcat(cstr_name,{sprintf('zdim2%d',i)});
+      end 

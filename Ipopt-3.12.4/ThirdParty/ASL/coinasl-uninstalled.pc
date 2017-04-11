@@ -1,0 +1,9 @@
+prefix=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4
+libdir=/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/ThirdParty/ASL
+
+Name: ASL
+Description: AMPL Solver Library
+URL: https://projects.coin-or.org/BuildTools
+Version: 1.3.4
+Libs: ${libdir}/libcoinasl.la -lm -ldl 
+Cflags: -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/ThirdParty/ASL -I/Users/ZZ/drakegit/drake-distro/Ipopt-3.12.4/ThirdParty/ASL/solvers

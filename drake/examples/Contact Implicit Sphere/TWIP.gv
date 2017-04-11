@@ -1,0 +1,14 @@
+digraph G {
+node [shape=box];
+"base_root" [label="base_root"];
+"arm1" [label="arm1"];
+"arm2" [label="arm2"];
+"wheel" [label="wheel"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_root" -> "arm_angle_1" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"arm_angle_1" -> "arm1"
+"arm1" -> "arm_angle_2" [label="xyz: 0 0 1 \nrpy: 0 -0 1.57"]
+"arm_angle_2" -> "arm2"
+"base_root" -> "theta" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"theta" -> "wheel"
+}
