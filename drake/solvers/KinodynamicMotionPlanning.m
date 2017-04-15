@@ -329,8 +329,8 @@ end
             
     end 
     
-    function TotalTraj=appendTraj(traj,visualize)
-        if nargin<2 
+    function TotalTraj=appendTraj(obj,traj,visualize)
+        if nargin<3 
             visualize=false; 
         end 
             
@@ -341,6 +341,7 @@ end
         end 
         
         if (visualize==true)
+            figure
             fnplt(TotalTraj)
         end
         
