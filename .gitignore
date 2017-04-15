@@ -39,6 +39,7 @@ drake/doc/DoxygenMatlab/html
 *.dSYM
 data_t.java
 drake/util/test/debugMexTest_mexdebug.mat
+drake/examples/Pendulum/Test_Results
 *_mexdebug.mat
 *.class
 tmp_w.mat
