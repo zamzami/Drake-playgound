@@ -307,25 +307,43 @@ end
     end 
     
     function[Finalxtraj,Finalutraj]=extractTrajectory(obj,path_ids)
+        
         for i=1:(length(path_ids)-1)
             f=find([obj.Traj.nodeStartID]==path_ids(i) & [obj.Traj.nodeEndID]==path_ids(i+1));
             
             Finalxtraj{i}=obj.Traj(f+1).xtraj;
             Finalutraj{i}=obj.Traj(f+1).utraj;
-            figure (3)
-            fnplt(Finalxtraj{i})
-            hold on 
-            figure (4)
-            fnplt(Finalutraj{i})
-            hold on
+            %figure (3)
+            %fnplt(Finalxtraj{i})
+            %hold on 
+            %figure (4)
+            %fnplt(Finalutraj{i})
+            %hold on    
            
-        end 
+        end                 
         
-        pv = PendulumVisualizer();
-        for i=1:length(Finalxtraj)
-            pv.playback(Finalxtraj{i});
+       % pv = PendulumVisualizer();
+       % for i=1:length(Finalxtraj)
+       %     pv.playback(Finalxtraj{i});
+       % end 
+            
+    end 
+    
+    function TotalTraj=appendTraj(traj,visualize)
+        if nargin<2 
+            visualize=false; 
         end 
             
+        TotalTraj=traj{1,1};
+        
+        for i=2:length(traj)
+         TotalTraj= TotalTraj.append(traj{1,i});
+        end 
+        
+        if (visualize==true)
+            fnplt(TotalTraj)
+        end
+        
     end 
     
     function Cplot=plotGoalTolerance(obj,center,radius)
