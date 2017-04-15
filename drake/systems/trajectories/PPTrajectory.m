@@ -635,31 +635,30 @@ classdef (InferiorClasses = {?ConstantTrajectory, ?Point}) PPTrajectory < Trajec
         k=obj.pp.order;
         trajAtEnd.pp = mkpp(trajAtEnd.pp.breaks,reshape(coefs,[d,l,k]),d);
       end
+              
+       if(firstEnd ~= secondStart)
+         warning('Appending trajectories with different intervals.')
+           
+         newtraj = obj;
+       
+       newtraj.pp.dim = obj.pp.dim;
+       newtraj.pp.order = obj.pp.order;
+       
+       newtraj.pp.pieces = obj.pp.pieces + trajAtEnd.pp.pieces;
+       
+       
+       newbreaks=trajAtEnd.pp.breaks+obj.pp.breaks(end);
       
-      if(firstEnd ~= secondStart)
-        warning('Appending trajectories with different intervals.')
-          
-        newtraj = obj;
-      
-      newtraj.pp.dim = obj.pp.dim;
-      newtraj.pp.order = obj.pp.order;
-      
-      newtraj.pp.pieces = obj.pp.pieces + trajAtEnd.pp.pieces;
-      
-      
-      newbreaks=trajAtEnd.pp.breaks+obj.pp.breaks(end);
-      
-      newtraj.pp.breaks = [obj.pp.breaks newbreaks(2:end)];
-      newtraj.pp.coefs = [obj.pp.coefs; trajAtEnd.pp.coefs];  
-      
-      newtraj = setOutputFrame(PPTrajectory(newtraj.pp),getOutputFrame(obj));
-      
-      newtraj.dim = obj.dim;
-      
-      newtraj.tspan = [newtraj.pp.breaks(1) newtraj.pp.breaks(end)];   
-          
-      else     
-        
+       newtraj.pp.breaks = [obj.pp.breaks newbreaks(2:end)];
+       newtraj.pp.coefs = [obj.pp.coefs; trajAtEnd.pp.coefs];  
+       
+       newtraj = setOutputFrame(PPTrajectory(newtraj.pp),getOutputFrame(obj));
+       
+       newtraj.dim = obj.dim;
+       
+       newtraj.tspan = [newtraj.pp.breaks(1) newtraj.pp.breaks(end)];   
+           
+       else     
       newtraj = obj;
       
       newtraj.pp.dim = obj.pp.dim;
@@ -678,7 +677,7 @@ classdef (InferiorClasses = {?ConstantTrajectory, ?Point}) PPTrajectory < Trajec
       newtraj.dim = obj.dim;
       
       newtraj.tspan = [min(obj.pp.breaks) max(trajAtEnd.pp.breaks)];
-      end 
+       end 
     end % append
     
     % should getParameters and setParameters include the breaks? or just
