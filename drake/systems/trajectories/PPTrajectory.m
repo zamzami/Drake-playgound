@@ -592,19 +592,19 @@ classdef (InferiorClasses = {?ConstantTrajectory, ?Point}) PPTrajectory < Trajec
       end
 
       % check trajectories are in the same frame
-      if obj.getOutputFrame ~= trajAtEnd.getOutputFrame
-        warning('Drake:PPTrajectory:MismatchingFrames', 'Shouldn''t append trajectories with different coordinate frames');
-      end
+  %    if obj.getOutputFrame ~= trajAtEnd.getOutputFrame
+  %      warning('Drake:PPTrajectory:MismatchingFrames', 'Shouldn''t append trajectories with different coordinate frames');
+  %    end
       
       % check for time condition
       firstEnd = obj.pp.breaks(end);
       secondStart = trajAtEnd.pp.breaks(1);
       
-      if (firstEnd ~= secondStart)
-        warning(strcat('Cannot append trajectories that do not start/end at the same time.', ...
-          'First trajectory ends at t = ',num2str(firstEnd), ...
-          ' but the second trajectory starts at t = ', num2str(secondStart),'Reverting to zamzami implementation'));
-      end
+     % if (firstEnd ~= secondStart)
+     %   warning(strcat('Cannot append trajectories that do not start/end at the same time.', ...
+     %     'First trajectory ends at t = ',num2str(firstEnd), ...
+     %     ' but the second trajectory starts at t = ', num2str(secondStart),'Reverting to zamzami implementation'));
+     % end
       
             
       % check for the same dimensions
@@ -637,7 +637,7 @@ classdef (InferiorClasses = {?ConstantTrajectory, ?Point}) PPTrajectory < Trajec
       end
               
        if(firstEnd ~= secondStart)
-         warning('Appending trajectories with different intervals.')
+        % warning('Appending trajectories with different intervals.')
            
          newtraj = obj;
        
