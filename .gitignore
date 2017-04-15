@@ -56,3 +56,4 @@ results_testRunning.mat
 drake/doc/DoxygenCPP
 *.bak
 Pendulum.pmd
+drake/examples/Pendulum/Test_Results
