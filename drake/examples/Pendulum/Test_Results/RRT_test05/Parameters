@@ -1,0 +1,29 @@
+GoalBias=0.3
+
+G =
+
+  KinodynamicMotionPlanning with properties:
+
+               TRAPPED: 0
+               REACHED: 1
+              ADVANCED: 2
+                  Tree: [1x1 digraph]
+                parent: []
+                 xinit: []
+           sampling_lb: [2x1 double]
+           sampling_ub: [2x1 double]
+            Control_lb: -1
+            Control_ub: 1
+                Min_dt: 0.5000
+                Max_dt: 2
+              num_vars: 2
+             num_input: 1
+    num_ControlSamples: 5
+     EdgeVariableNames: {'EndNodes'  'Distance'  'Control'  'Timestep'}
+                  Traj: [1x1 struct]
+                    nq: 1
+                     n: 5091
+              children: []
+                R_goal: 0.3000
+      Ndiscretizations: 10
+                     N: 1000
