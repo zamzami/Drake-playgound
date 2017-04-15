@@ -396,7 +396,7 @@ classdef Visualizer < DrakeSystem
 
       if (obj.display_dt==0)
         if (ishandle(obj)) error('i assumed it wasn''t a handle'); end
-        obj.display_dt = 1/30;  % just for the remainder of this file.
+        obj.display_dt = 1/100;  % just for the remainder of this file.
       end
 
       breaks = getBreaks(xtraj);
@@ -407,7 +407,7 @@ classdef Visualizer < DrakeSystem
       mov.FrameRate = obj.playback_speed/obj.display_dt;
       open(mov);
 
-      width=[]; height=[];
+      %width=[]; height=[];
       for i=1:length(tspan)
         t = tspan(i);
         if (ts(1)>0) t = round((t-ts(2))/ts(1))*ts(1) + ts(2); end  % align with sample times if necessary
@@ -417,12 +417,15 @@ classdef Visualizer < DrakeSystem
         else
           f=gca;
         end
-        if (isempty(width))
-          fr=getframe(f);
-          [height,width,~]=size(fr.cdata);
-        else
+        %if (isempty(width))
+         % fr=getframe(f);
+          %[height,width,~]=size(fr.cdata);
+            pos = get(f, 'Position'); %// gives x left, y bottom, width, height
+            width = pos(3);
+            height = pos(4);
+       % else
           fr=getframe(f,[0 0 width height]);  % explicitly ask for the same size, otherwise videowriter will complain
-        end
+        %end
         writeVideo(mov,fr);
       end
 
