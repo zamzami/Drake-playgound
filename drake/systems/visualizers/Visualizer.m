@@ -407,25 +407,26 @@ classdef Visualizer < DrakeSystem
       mov.FrameRate = obj.playback_speed/obj.display_dt;
       open(mov);
 
-      %width=[]; height=[];
       for i=1:length(tspan)
         t = tspan(i);
         if (ts(1)>0) t = round((t-ts(2))/ts(1))*ts(1) + ts(2); end  % align with sample times if necessary
         obj.drawWrapper(t,eval(xtraj,t));
         if (obj.draw_axes)
           f=gcf;
-        else
-          f=gca;
-        end
-        %if (isempty(width))
-         % fr=getframe(f);
-          %[height,width,~]=size(fr.cdata);
-            pos = get(f, 'Position'); %// gives x left, y bottom, width, height
+            pos = f.Position; %// gives x left, y bottom, width, height
             width = pos(3);
             height = pos(4);
-       % else
-          fr=getframe(f,[0 0 width height]);  % explicitly ask for the same size, otherwise videowriter will complain
-        %end
+           fr=getframe(f,[0, 0, width, height]);  % explicitly ask for the same size, otherwise videowriter will complain
+
+        else
+          f=gca;
+            margin=50;
+            pos = f.Position; %// gives x left, y bottom, width, height
+            width = pos(3);
+            height = pos(4);
+          fr=getframe(f,[margin+60, margin, width+10*margin, height+10*margin]);  % explicitly ask for the same size, otherwise videowriter will complain
+        end
+        
         writeVideo(mov,fr);
       end
 
