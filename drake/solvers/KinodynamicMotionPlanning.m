@@ -6,33 +6,32 @@ classdef KinodynamicMotionPlanning
   end
     
 properties (Access = public)
-    Tree
-    parent
-    xinit
-    sampling_lb
-    sampling_ub
-    Control_lb
-    Control_ub
-    torque_limit=5;
-    qlimit=2*pi;
-    qdotlimit=10;
-    Min_dt=0.01;
-    Max_dt=0.1;
-    x_start;
-    x_goal;
-    num_vars
-    num_input
-    num_ControlSamples=10;
-    EdgeVariableNames
-    Traj
-    nq
-    n
-    children
-    R_goal=0.4;
-    fixedtime=false;
-    timestep=0.1;
-    Ndiscretizations=2;
-    GoalBias=0.1;
+    Tree % Directed Graph data structre holding the Tree
+    xinit % initial state 
+    sampling_lb % lower bound on state vector
+    sampling_ub % upper bound on state vector
+    Control_lb  % lower bound on control vector
+    Control_ub  % upper bound on control vector
+    torque_limit=5; % Limit on torque 
+    qlimit=2*pi;  % Domain of search in confiquration space
+    qdotlimit=10; %  Domain of search in qdot spcace
+    Min_dt=0.01; % Minimum simulation time 
+    Max_dt=0.1; % Maximum simulation 
+    x_start; % Start state
+    x_goal; % Goal state
+    num_vars % number of state variables
+    num_input % Number of input variables
+    num_ControlSamples=10; % Number of simulations per RRT iteration 
+    EdgeVariableNames % array holding variables to be stored along each edge
+    Traj % Traj data structure where trajectories are stored 
+    nq % number of configuration variables
+    n % total number of nodes
+    R_goal=0.4; % Radius of tolerance region
+    fixedtime=false; % fixed simulation time
+    timestep=0.1; % simulation time if fixedtime is true
+    Ndiscretizations=2; % Number of pieces in utraj PPT
+    GoalBias=0.1; %Probablity of GoalBias
+    N=1e4; % Maximum number of nodes 
     visualize=false;
 end
   
@@ -74,7 +73,7 @@ end
 
       
       % Initialize Tree
-      obj.Tree=digraph();  %create empty tree
+      obj.Tree=digraph();  %Initialize an empty tree using Matlab's Directed Graph structure 
       
       %Nodes
       obj.Tree=obj.Tree.addnode(1); %add root node 
@@ -82,44 +81,39 @@ end
       
       for i=1:num_vars
       obj.Tree.Nodes.State{1,i}=xinit(i);  %Create node variable State and initialize it with qinit
-      end 
-      %Edges
-      obj.EdgeVariableNames={'EndNodes','Distance','Control','Timestep'};
-      EdgeTable=table([1 2],[0],[0],[0],'VariableNames',obj.EdgeVariableNames);
-      obj.Tree=obj.Tree.addedge(EdgeTable);
-      obj.Tree=obj.Tree.rmedge(1);
-      obj.Tree=obj.Tree.rmnode(2);
+      end
       
-      %Traj structre to store trajectories in the tree
-      %obj.Traj = struct('ID',[],'xtraj',[],'utraj',[]);
+      %Edges
+      obj.EdgeVariableNames={'EndNodes','Distance','Control','Timestep'}; % Variables to be added to an edge 
+      EdgeTable=table([1 2],[0],[0],[0],'VariableNames',obj.EdgeVariableNames); % Edge is stored as a table data structre in Directed Graph 
+      obj.Tree=obj.Tree.addedge(EdgeTable); % Initialize Edge with a dummy node
+      obj.Tree=obj.Tree.rmedge(1); % remove edge 
+      obj.Tree=obj.Tree.rmnode(2); % remove dummy node 
+      
+      %Traj structre to store trajectories in the tree (because table in
+      %Directed Graph data structrue does not accept PPTrajectory)
       obj.Traj=struct('nodeStartID',[],'nodeEndID',[],'xtraj',[],'utraj',[],'dt',[]);
       obj.Traj(1)=[];
 
     end 
-    
-    
-%       for i=1:num_input
-%       Tree.Nodes.Control{1,i}=u0(i);  %Create node variable Control and initialize it with u0
-%       end 
-%     end
      
     function d=distanceMetric(obj,x1,x2)
-     d = sqrt(sum(bsxfun(@minus, x1, x2).^2,1));
+     d = sqrt(sum(bsxfun(@minus, x1, x2).^2,1)); % L2 norm 
      end
      
      function [obj,path_ids,info,tElapsed]=RRT(obj,x_start,x_goal,options)
       tStart=tic;
-      set(gcf,'currentchar',' ')         % set a dummy character
-      defaultOptions.display_after_every = 50;
+      set(gcf,'currentchar',' ')         % set a dummy character to stop RRT on key press
+      %defaultOptions.display_after_every = 50;
       defaultOptions.goal_bias = obj.GoalBias;
-      defaultOptions.N = 1e4;
+      defaultOptions.N = obj.N; % Limit on the number of nodes
       defaultOptions.visualize = false;
       options = applyDefaults(options, defaultOptions);
       
       if nargin < 3
           x_start=obj.xinit;
       end 
-      %Re-add root state alues
+      %Re-add root state values
       for i=1:length(x_start)
       obj.Tree.Nodes.State{1,i}=x_start(i);
       end
@@ -132,13 +126,15 @@ end
       
       info=2;
       tloopStart = tic;
+      
       while obj.n < options.N
           try_goal=rand <options.goal_bias;
           if try_goal
               x_sample=x_goal;
           else 
               x_sample=obj.randomSample(); 
-          end  
+          end 
+          
         [obj, status,xnextbest,x_near] = extend(obj, x_sample);
                    
         
@@ -168,17 +164,17 @@ end
     
         end
         
-        %if try_goal && status == obj.REACHED
         if status == obj.REACHED
           info = 1;
           path_ids = obj.getPathToNode(obj.n);
           tElapsed = toc(tStart);
           break;
         end
-       path_ids = obj.getPathToNode(obj.n);
+        
+       path_ids = obj.getPathToNode(obj.n); 
        
               
-       if get(gcf,'currentchar')==' '  % which gets changed when key is pressed
+       if get(gcf,'currentchar')==' '  % Break on key press
            tElapsed = toc(tStart);
             break;
         end 
@@ -187,8 +183,17 @@ end
  end 
  
     function x = randomSample(obj)
-      x = obj.sampling_lb + (obj.sampling_ub-obj.sampling_lb).*rand(obj.num_vars,1);
+      x = obj.sampling_lb + (obj.sampling_ub-obj.sampling_lb).*rand(obj.num_vars,1); %Uniform sampling
     end
+    
+    function Urand =SampleControl(obj)
+        Urand= obj.Control_lb + (obj.Control_ub-obj.Control_lb).*rand(obj.num_input,1);
+    end 
+    
+    function dt =SampleTime(obj)
+        dt= obj.Min_dt + (obj.Max_dt-obj.Min_dt)*rand(1);
+    end 
+    
     
     
     function [obj, id,T] = addNode(obj, x)
@@ -224,25 +229,26 @@ end
      
       %visualize state space plot
       if obj.visualize
-      figure(10); 
-      plot(obj.x_start(1),obj.x_start(2),'rx',obj.x_goal(1),obj.x_goal(2),'gx','MarkerSize',20,'LineWidth',3);
-      hold on 
-      plot(x_sample(1),x_sample(2),'co','MarkerSize',10,'LineWidth',3)
-      plot(x_near(1),x_near(2),'ro','MarkerSize',10,'LineWidth',3)
-      plot(xnextbest(1),xnextbest(2),'go','MarkerSize',10,'LineWidth',3)
-      obj.plotGoalTolerance(obj.x_goal,obj.R_goal);
-      axis square     
+        figure(10); 
+        plot(obj.x_start(1),obj.x_start(2),'rx',obj.x_goal(1),obj.x_goal(2),'gx','MarkerSize',20,'LineWidth',3);
+        hold on 
+        plot(x_sample(1),x_sample(2),'co','MarkerSize',10,'LineWidth',3)
+        plot(x_near(1),x_near(2),'ro','MarkerSize',10,'LineWidth',3)
+        plot(xnextbest(1),xnextbest(2),'go','MarkerSize',10,'LineWidth',3)
+        obj.plotGoalTolerance(obj.x_goal,obj.R_goal);
+        axis square     
      
-      for i=2:obj.n
-      fnplt(obj.Traj(i).xtraj);
-      end
-      hold off
+        for i=2:obj.n
+        fnplt(obj.Traj(i).xtraj);
+        end
+        hold off
       end 
        
         d2goal=obj.distanceMetric(xnextbest,obj.x_goal); %distance to goal 
+        
         fprintf('d2goal:%4.2f \n',d2goal);
 
-        if d2goal < obj.R_goal     
+        if d2goal < obj.R_goal  % Check if reached tolerance region      
           status = obj.REACHED;
         else
           status = obj.ADVANCED;
@@ -271,14 +277,6 @@ end
         end 
       [d, id_near] = min(d_all);
     end
-    
-    function Urand =SampleControl(obj)
-        Urand= obj.Control_lb + (obj.Control_ub-obj.Control_lb).*rand(obj.num_input,1);
-    end 
-    
-    function dt =SampleTime(obj)
-        dt= obj.Min_dt + (obj.Max_dt-obj.Min_dt)*rand(1);
-    end 
     
     function [xnextbest, Ubest,dbest,dtbest,xtrajbest,utrajbest]=Propogate(obj,x_near,xdesired)
 
@@ -343,6 +341,9 @@ end
         if (visualize==true)
             figure
             fnplt(TotalTraj)
+            title('Torque Profile')
+            xlabel('Time(s)','FontSize',14)
+            ylabel('Torque (N.m)','FontSize',14)
         end
         
     end 
@@ -351,10 +352,6 @@ end
         N=50;
        
         t = 2*pi/N*(1:N); 
-        %theta=linspace(0,2*pi,numPoints);
-        %rho=ones(1,numPoints)*radius;
-        
-        %[X,Y]=plo2cart(theta,rho);
         X=radius*cos(t)+center(1);
         Y=radius*sin(t)+center(2);
         
